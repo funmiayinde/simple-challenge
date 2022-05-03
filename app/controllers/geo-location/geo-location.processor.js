@@ -17,7 +17,6 @@ class GeoLocationProcessor {
             }
         })
             .then((response) => {
-                console.log('response-data', response.data);
                 if (response.status === OK && response.data) {
                     return osmtogeojson(response.data);
                 }
