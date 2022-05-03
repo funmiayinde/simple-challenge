@@ -19,10 +19,10 @@ export default class GeoLocationValidation {
             max_lat: 'required',
             max_lon: 'required',
         };
-        const validate = new Validator(body, rules);
-        if (!validate.passes()) {
-            return new AppError(lang.get('error').inputs, validate.errors.all());
+        const validator = new Validator(body, rules);
+        return {
+            errors: validator.errors.all(),
+            passed: validator.passes(),
         }
-        return null;
     }
 }

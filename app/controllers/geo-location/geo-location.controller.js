@@ -1,9 +1,10 @@
 import _ from "lodash";
 import AppError from "../../utils/app-error";
 import AppResponse from "../../utils/app-response";
+import { OK } from "../../utils/codes";
 import GeoLocationProcessor from "./geo-location.processor";
 import GeoLocationValidation from "./geo-location.validation";
-
+import lang from '../../lang'
 
 /**
  * @class {GeoLocationController}
@@ -19,11 +20,12 @@ class GeoLocationController {
     static async fetchGeoLocation(req, res, next) {
         try {
             const validate = GeoLocationValidation.validation(req.query);
-            if (!_.isNull(validate) && validate instanceof AppError) {
-                throw validate;
+            console.log('validate:', validate);
+            if (!validate.passed) {
+                return next(new AppError(lang.get('error').inputs, BAD_REQUEST, validate.errors));
             }
             const data = await GeoLocationProcessor.fetchGeoLocation(req.query);
-            return res.status(OK).json(AppResponse.format(meta, data));
+            return res.status(OK).json(AppResponse.format(AppResponse.getSuccessMeta(), data));
         } catch (e) {
             return next(e);
         }
