@@ -31,6 +31,9 @@ class GeoLocationController {
                 return next(new AppError(lang.get('error').inputs, BAD_REQUEST, validator.errors.all()));
             }
             const data = await GeoLocationProcessor.fetchGeoLocation(req.query);
+            if (data instanceof AppError){
+                return next(data);
+            }
             return res.status(OK).json(AppResponse.format(AppResponse.getSuccessMeta(), data));
         } catch (e) {
             return next(e);
